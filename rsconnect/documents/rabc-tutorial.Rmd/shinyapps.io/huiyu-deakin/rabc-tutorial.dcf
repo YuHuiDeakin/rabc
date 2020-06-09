@@ -1,0 +1,12 @@
+name: rabc-tutorial
+title: rabc-tutorial
+username:
+account: huiyu-deakin
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2221508
+bundleId: 3088702
+url: https://huiyu-deakin.shinyapps.io/rabc-tutorial/
+when: 1588303961.19394
+asMultiple: FALSE
+asStatic: FALSE

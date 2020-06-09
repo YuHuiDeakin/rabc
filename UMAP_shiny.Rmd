@@ -1,0 +1,18 @@
+---
+title: "UMAP_shiny"
+output: html_document
+runtime: shiny
+---
+
+```{r}
+library(rabc)
+library(tidyverse)
+library(shiny)
+library(umap)
+data("whitestork_acc")
+whitestork_acc_sorted <- raw_order(whitestork_acc)
+df_time <- feature_time(df_raw = whitestork_acc_sorted, winlen_dba = 11)
+df_freq <- feature_freq(df_raw = whitestork_acc_sorted, samp_freq = 10.54)
+label_vec <- whitestork_acc_sorted[, ncol(whitestork_acc_sorted)]
+UMAP_visual()
+```

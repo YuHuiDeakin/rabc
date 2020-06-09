@@ -1,0 +1,12 @@
+name: rabc_UMAP
+title: rabc_UMAP
+username:
+account: huiyu-deakin
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2362527
+bundleId: 3198651
+url: https://huiyu-deakin.shinyapps.io/rabc_UMAP/
+when: 1590638365.37724
+asMultiple: FALSE
+asStatic: FALSE

@@ -1,0 +1,24 @@
+#'Demo dataset for all examples in this package
+#'
+#'White stork (Ciconia ciconia) accelerometer data. This dataset includes 1746
+#'behaviour bouts (each row is one bout with one behaviour type). Each row contains
+#'121 columns. The first 120 columns are double accelerometer measurements from three
+#'orhtogonal axes, arraged as x,y,z,x,y,z,...,x,y,z. The final column is character
+#'that contains behaviour type label. The 5 different labels include "A_FLIGHT" -
+#'active flight (77 cases), "P_FLIGHT" - passive filght (96), "WALK" -
+#'walking (437), "STND" - standing (863), "SITTING" - resting (273). Sampling frequency
+#'is 10.54 Hz.
+#'
+#'@docType data
+#'
+#'@usage data(whitestork_acc)
+#'
+#'@format A data.frame
+#'
+#'@source \href{http://accapp.move-ecol-minerva.huji.ac.il/demo/}
+#'
+#'@examples
+#'data(whitestork_acc)
+#'dim(whitestork_acc)
+#'summry(as.factor(whitestork_acc$V121))
+"whitestork_acc"

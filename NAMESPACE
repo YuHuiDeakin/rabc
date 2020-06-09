@@ -1,0 +1,4 @@
+exportPattern("^[[:alpha:]]+")
+importFrom(magrittr,"%>%")
+importFrom("grDevices", "rainbow")
+importFrom("stats", "cor", "fft", "lm", "predict", "sd", "var")

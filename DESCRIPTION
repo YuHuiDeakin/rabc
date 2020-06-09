@@ -1,0 +1,39 @@
+Package: rabc
+Type: Package
+Title: R for Animal Behaviour Classification
+Version: 0.1.0
+Authors@R: 
+    c(person(given = "Hui",
+             family = "Yu",
+             role = c("aut", "cre"),
+             email = "yubr@deakin.edu.au"),
+      person(given = "Marcel",
+             family = "Klaassen",
+             role = "ctb"))
+Maintainer: Hui Yu <yubr@deakin.edu.au>
+Description: Prediction of animal behaviours with accelerometer data by supervised machine
+    learning methods. This package provides interactive tools to users to enable better 
+    behaviour category definition, feature selection, model training and results retrospective
+    diagnosis.
+Depends:
+    R (>= 3.2.0)
+Imports:
+    dygraphs,
+    magrittr,
+    tidyr,
+    dplyr,
+    zoo,
+    entropy,
+    shiny,
+    methods,
+    graphics,
+    stats,
+    utils,
+    ggplot2,
+    xgboost,
+    umap,
+    caret
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.0
