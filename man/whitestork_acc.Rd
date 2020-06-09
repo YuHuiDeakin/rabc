@@ -8,7 +8,7 @@
 A data.frame
 }
 \source{
-\href{http://accapp.move-ecol-minerva.huji.ac.il/demo/}
+\link{http://accapp.move-ecol-minerva.huji.ac.il/demo/}
 }
 \usage{
 data(whitestork_acc)
