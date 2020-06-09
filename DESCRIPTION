@@ -11,6 +11,7 @@ Authors@R:
              family = "Klaassen",
              role = "ctb"))
 Maintainer: Hui Yu <yubr@deakin.edu.au>
+URL: http://github.com/YuHuiDeakin/rabc
 Description: Prediction of animal behaviours with accelerometer data by supervised machine
     learning methods. This package provides interactive tools to users to enable better 
     behaviour category definition, feature selection, model training and results retrospective
