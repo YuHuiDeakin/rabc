@@ -217,16 +217,16 @@ plot_confusion_matrix <- function(df = NULL, vec_label = NULL) {
   con_frame$flag <- as.factor(con_frame$flag)
   tf <- con_frame %>%
     dplyr::group_by(obs, pre) %>%
-    dplyr::summarise(N = n()) %>%
+    dplyr::summarise(N = dplyr::n()) %>%
     dplyr::ungroup() %>%
     tidyr::complete(obs, pre, fill = list(N = 0))
   con_frame <- dplyr::left_join(con_frame, tf, by = c("obs", "pre"))
   tempdf <- con_frame %>%
     dplyr::group_by(obs, pre) %>%
-    dplyr::summarise(N = n())
+    dplyr::summarise(N = dplyr::n())
   diagvalue <- tempdf$N[which(tempdf$obs == tempdf$pre)]
-  recallvalue <- (tempdf %>% group_by(obs) %>% summarise(total = sum(N)))$total
-  precisionvalue <- (tempdf %>% group_by(pre) %>% summarise(total = sum(N)))$total
+  recallvalue <- (tempdf %>% dplyr::group_by(obs) %>% dplyr::summarise(total = sum(N)))$total
+  precisionvalue <- (tempdf %>% dplyr::group_by(pre) %>% dplyr::summarise(total = sum(N)))$total
   print(ggplot2::ggplot(con_frame, aes(x = as.numeric(obs), y = as.numeric(pre),
                                        color = flag, label = N)) +
           ggplot2::geom_jitter(width = 0.2, height = 0.2, size = 0.7) +
@@ -234,12 +234,12 @@ plot_confusion_matrix <- function(df = NULL, vec_label = NULL) {
           ggplot2::scale_x_continuous(name = "Observations",
                                       breaks = 1:length(levels(con_frame$obs)),
                                       labels = unique(as.character(con_frame$obs)),
-                                      sec.axis = dup_axis(labels = round(diagvalue*100/recallvalue,2),
+                                      sec.axis = ggplot2::dup_axis(labels = round(diagvalue*100/recallvalue,2),
                                                           name = "Recall rate (%)")) +
           ggplot2::scale_y_continuous(name = "Predictions",
                                       breaks = 1:length(levels(con_frame$pre)),
                                       labels = unique(as.character(con_frame$obs)),
-                                      sec.axis = dup_axis(labels = round(diagvalue*100/precisionvalue,2),
+                                      sec.axis = ggplot2::dup_axis(labels = round(diagvalue*100/precisionvalue,2),
                                                           name = "Precision (%)")) +
           ggplot2::labs(title = "Classificaiton confusion table plot"))
   return(result_frame)
