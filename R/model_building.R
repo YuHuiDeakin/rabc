@@ -67,7 +67,7 @@ train_model <- function(df = NULL, vec_label = NULL, hyper_choice = "defaults",
       allowParallel = T,
       verboseIter = F,
       returnData = F,
-      summaryFunction = multiClassSummary
+      summaryFunction = caret::multiClassSummary
     )
     xgb_model <- caret::train(train_data, train_label,
                        trControl = xgb_trcontrol,
@@ -99,7 +99,7 @@ train_model <- function(df = NULL, vec_label = NULL, hyper_choice = "defaults",
       allowParallel = T,
       verboseIter = F,
       returnData = F,
-      summaryFunction = multiClassSummary
+      summaryFunction = caret::multiClassSummary
     )
     xgb_model <- caret::train(train_data, train_label,
                        trControl = xgb_trcontrol,
@@ -185,7 +185,7 @@ plot_confusion_matrix <- function(df = NULL, vec_label = NULL) {
     allowParallel = T,
     verboseIter = F,
     returnData = F,
-    summaryFunction = multiClassSummary
+    summaryFunction = caret::multiClassSummary
   )
 
   for (i in 1:No_folds) {

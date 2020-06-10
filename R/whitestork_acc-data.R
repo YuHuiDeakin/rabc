@@ -20,5 +20,5 @@
 #'@examples
 #'data(whitestork_acc)
 #'dim(whitestork_acc)
-#'summry(as.factor(whitestork_acc$V121))
+#'summary(as.factor(whitestork_acc$V121))
 "whitestork_acc"

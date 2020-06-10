@@ -26,6 +26,6 @@ is 10.54 Hz.
 \examples{
 data(whitestork_acc)
 dim(whitestork_acc)
-summry(as.factor(whitestork_acc$V121))
+summary(as.factor(whitestork_acc$V121))
 }
 \keyword{datasets}

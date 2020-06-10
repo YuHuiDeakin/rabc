@@ -81,7 +81,7 @@ select_features <- function(df_feature = NULL, vec_label = NULL,
     allowParallel = T,
     verboseIter = F,
     returnData = F,
-    summaryFunction = multiClassSummary
+    summaryFunction = caret::multiClassSummary
   )
 
   for (i in 1:no_features) {
