@@ -136,17 +136,17 @@ plot_selection_accuracy <- function(results = results) {
   df <- data.frame(feature, accuracy)
   df$accuracy_diff <- df$accuracy
   df$accuracy_diff[-1] <- diff(df$accuracy)
-  ggplot2::ggplot(df, aes(x = feature, y = accuracy)) +
+  ggplot2::ggplot(df, ggplot2::aes(x = feature, y = accuracy)) +
     ggplot2::geom_point(shape = 1, size = 2, color = "red") +
     ggplot2::geom_line(color = "red") +
-    ggplot2::geom_col(aes(x = feature, y = accuracy_diff), alpha = 0.5) +
+    ggplot2::geom_col(ggplot2::aes(x = feature, y = accuracy_diff), alpha = 0.5) +
     ggplot2::scale_x_continuous(breaks = 1:length(results$features),
                      labels = results$features) +
     ggplot2::xlab("\nSelected features") +
     ggplot2::ylab("Accuracy\n") +
     ggplot2::labs(title = "Classification accuracy") +
     ggplot2::ylim(-0.05,1) +
-    ggplot2::geom_text(aes(x = feature, y = accuracy_diff + 0.03,
+    ggplot2::geom_text(ggplot2::aes(x = feature, y = accuracy_diff + 0.03,
                            label = ifelse(accuracy_diff > 0.001,
                                           sprintf("%0.3f", round(accuracy_diff, digits = 3)),
                                           sprintf("%0.1e", accuracy_diff)))) +

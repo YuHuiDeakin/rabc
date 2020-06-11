@@ -260,17 +260,17 @@ plot_feature_grouped <- function(df_feature = NULL, vec_label = NULL,
     df_sub <- df_tran[unclass(df_tran$features) %in% factor_ind, ]
 
     if (geom == "boxplot") {
-      p <- ggplot2::ggplot(df_sub, aes(x = label, y = Values)) +
+      p <- ggplot2::ggplot(df_sub, ggplot2::aes(x = label, y = Values)) +
         ggplot2::geom_boxplot() +
         ggplot2::facet_wrap("features", nrow = 3, ncol = 3, scales = "free_y")
       print(p) } else if (geom == "density") {
-        p <- ggplot2::ggplot(df_sub, aes(x = Values, fill = label)) +
+        p <- ggplot2::ggplot(df_sub, ggplot2::aes(x = Values, fill = label)) +
           ggplot2::geom_density(alpha = 0.6) +
           ggplot2::scale_fill_brewer(palette = "Set1") +
           ggplot2::facet_wrap("features", nrow = 3, ncol = 3, scales = "free")
         print(p)
       } else if (geom == "violin") {
-        p <- ggplot2::ggplot(df_sub, aes(y = Values, x = label)) +
+        p <- ggplot2::ggplot(df_sub, ggplot2::aes(y = Values, x = label)) +
           ggplot2::geom_violin() +
           ggplot2::facet_wrap("features", nrow = 3, ncol = 3, scales = "free_y")
         print(p)

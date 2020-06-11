@@ -227,7 +227,7 @@ plot_confusion_matrix <- function(df = NULL, vec_label = NULL) {
   diagvalue <- tempdf$N[which(tempdf$obs == tempdf$pre)]
   recallvalue <- (tempdf %>% dplyr::group_by(obs) %>% dplyr::summarise(total = sum(N)))$total
   precisionvalue <- (tempdf %>% dplyr::group_by(pre) %>% dplyr::summarise(total = sum(N)))$total
-  print(ggplot2::ggplot(con_frame, aes(x = as.numeric(obs), y = as.numeric(pre),
+  print(ggplot2::ggplot(con_frame, ggplot2::aes(x = as.numeric(obs), y = as.numeric(pre),
                                        color = flag, label = N)) +
           ggplot2::geom_jitter(width = 0.2, height = 0.2, size = 0.7) +
           ggplot2::geom_text(nudge_x = 0.3, nudge_y = -0.3, show.legend = FALSE) +

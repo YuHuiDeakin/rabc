@@ -133,7 +133,7 @@ server <- function(input, output, session) {
                            min_dist = paras2(), metric = paras3())
     umap_df <<- dplyr::bind_cols(as.data.frame(umap_out$layout), labels = df_out$label_vec)
 
-    ggplot2::ggplot(umap_df, aes(x = V1, y = V2, color = labels)) +
+    ggplot2::ggplot(umap_df, ggplot2::aes(x = V1, y = V2, color = labels)) +
       ggplot2::geom_point(alpha = 0.8) +
       ggplot2::xlab("UMAP_dimension_1") +
       ggplot2::ylab("UMAP_dimension_2") +
@@ -155,7 +155,7 @@ server <- function(input, output, session) {
       max(umap_df1$feature) - min(umap_df1$feature))
     values_col <- unclass(summary(values_0to1))[-4]
 
-    ggplot2::ggplot(umap_df1, aes(x = V1, y = V2, color = feature,
+    ggplot2::ggplot(umap_df1, ggplot2::aes(x = V1, y = V2, color = feature,
                                   shape = labels)) +
       ggplot2::geom_point(size = 2) +
       ggplot2::scale_shape_manual(values = 65:(64 + length(unique(umap_df1$labels)))) +
@@ -189,7 +189,7 @@ server <- function(input, output, session) {
       umap_new <- umap::umap(as.matrix(df_out[,customfeatures]), metric = "manhattan")
       umap_newdf <- dplyr::bind_cols(as.data.frame(umap_new$layout),
                                      labels = df_out$label_vec)
-      ggplot2::ggplot(umap_newdf, aes(x = V1, y = V2, color = labels)) +
+      ggplot2::ggplot(umap_newdf, ggplot2::aes(x = V1, y = V2, color = labels)) +
         ggplot2::geom_point(alpha = 0.8) +
         ggplot2::xlab("UMAP_dimension_1") +
         ggplot2::ylab("UMAP_dimension_2") +
