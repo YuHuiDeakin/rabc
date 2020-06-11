@@ -31,7 +31,7 @@
 #'  hyperparameters. When hyper_choice = "tune", this returned classifier will use
 #'  best tuned hyperparameters.
 #'@examples
-#'train_model(df_time, vec_label = whitestork_acc_sorted[,ncol(whitestork_acc_sorted)])
+#'final_model <- train_model(df_time, vec_label = whitestork_acc_sorted[,ncol(whitestork_acc_sorted)])
 train_model <- function(df = NULL, vec_label = NULL, hyper_choice = "defaults",
                         train_ratio = 0.75) {
   if (is.null(df)) {

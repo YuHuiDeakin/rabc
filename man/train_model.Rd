@@ -50,5 +50,5 @@ When the argument hyper_choice is set to "defaults", the arguments for
  best tuned hyperparameters.
 }
 \examples{
-train_model(df_time, vec_label = whitestork_acc_sorted[,ncol(whitestork_acc_sorted)])
+final_model <- train_model(df_time, vec_label = whitestork_acc_sorted[,ncol(whitestork_acc_sorted)])
 }
