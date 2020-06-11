@@ -124,6 +124,7 @@ train_model <- function(df = NULL, vec_label = NULL, hyper_choice = "defaults",
                                trControl = xgb_trcontrol,
                                tuneGrid = grids_full,
                                method = "xgbTree")
+    return(xgb_return)
   }
 
 }
