@@ -138,12 +138,12 @@ server <- function(input, output, session) {
       ggplot2::xlab("UMAP_dimension_1") +
       ggplot2::ylab("UMAP_dimension_2") +
       ggplot2::scale_color_brewer(palette = "Set1") +
-      ggplot2::theme(axis.text.x = element_text(size = 12, face = "bold"),
-            axis.text.y = element_text(size = 12, face = "bold"),
-            axis.title.x = element_text(size = 14, face = "bold"),
-            axis.title.y = element_text(size = 14, face = "bold"),
-            legend.text = element_text(size = 12, face = "bold"),
-            legend.title = element_text(size = 15, face = "bold"))
+      ggplot2::theme(axis.text.x = ggplot2::element_text(size = 12, face = "bold"),
+            axis.text.y = ggplot2::element_text(size = 12, face = "bold"),
+            axis.title.x = ggplot2::element_text(size = 14, face = "bold"),
+            axis.title.y = ggplot2::element_text(size = 14, face = "bold"),
+            legend.text = ggplot2::element_text(size = 12, face = "bold"),
+            legend.title = ggplot2::element_text(size = 15, face = "bold"))
   }, height = function(){
     session$clientData$output_UMAP_width * 0.7
   })
@@ -163,12 +163,12 @@ server <- function(input, output, session) {
       ggplot2::ylab("UMAP_dimension_2") +
       ggplot2::scale_color_gradientn(colours = rainbow(8)[5:1],
                                      values = values_col) +
-      ggplot2:: theme(axis.text.x = element_text(size = 12, face = "bold"),
-            axis.text.y = element_text(size = 12, face = "bold"),
-            axis.title.x = element_text(size = 14, face = "bold"),
-            axis.title.y = element_text(size = 14, face = "bold"),
-            legend.text = element_text(size = 12, face = "bold"),
-            legend.title = element_text(size = 15, face = "bold")) +
+      ggplot2:: theme(axis.text.x = ggplot2::element_text(size = 12, face = "bold"),
+            axis.text.y = ggplot2::element_text(size = 12, face = "bold"),
+            axis.title.x = ggplot2::element_text(size = 14, face = "bold"),
+            axis.title.y = ggplot2::element_text(size = 14, face = "bold"),
+            legend.text = ggplot2::element_text(size = 12, face = "bold"),
+            legend.title = ggplot2::element_text(size = 15, face = "bold")) +
       ggplot2::guides(
         color = guide_colorbar(order = 1, nbin = 60, draw.ulim = T, draw.llim = T),
         shape = guide_legend(order = 0)
@@ -194,12 +194,12 @@ server <- function(input, output, session) {
         ggplot2::xlab("UMAP_dimension_1") +
         ggplot2::ylab("UMAP_dimension_2") +
         ggplot2::scale_color_brewer(palette = "Set1") +
-        ggplot2::theme(axis.text.x = element_text(size = 12, face = "bold"),
-              axis.text.y = element_text(size = 12, face = "bold"),
-              axis.title.x = element_text(size = 14, face = "bold"),
-              axis.title.y = element_text(size = 14, face = "bold"),
-              legend.text = element_text(size = 12, face = "bold"),
-              legend.title = element_text(size = 15, face = "bold"))
+        ggplot2::theme(axis.text.x = ggplot2::element_text(size = 12, face = "bold"),
+              axis.text.y = ggplot2::element_text(size = 12, face = "bold"),
+              axis.title.x = ggplot2::element_text(size = 14, face = "bold"),
+              axis.title.y = ggplot2::element_text(size = 14, face = "bold"),
+              legend.text = ggplot2::element_text(size = 12, face = "bold"),
+              legend.title = ggplot2::element_text(size = 15, face = "bold"))
     }, height = function(){
       session$clientData$output_UMAP_custom_width * 0.7
     })
