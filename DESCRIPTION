@@ -21,7 +21,7 @@ Depends:
 Imports:
     dygraphs,
     magrittr,
-    tidyr,
+    tidyr (>= 1.0.2),
     dplyr,
     zoo,
     entropy,
