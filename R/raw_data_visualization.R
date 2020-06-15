@@ -227,12 +227,12 @@ plot_feature <- function(df_feature = NULL, vec_label = NULL) {
 #'data(whitestork_acc)
 #'whitestork_acc_sorted <- order_acc(whitestork_acc)
 #'df_time <- calculate_feature_time(whitestork_acc_sorted, winlen_dba = 11)
-#'plot_feature_grouped(df_feature = df_time,
+#'plot_grouped_feature(df_feature = df_time,
 #'                    vec_label = whitestork_acc_sorted[,ncol(whitestork_acc_sorted)])
 #'
-#'plot_feature_grouped(df_feature = df_time[, 1:15],
+#'plot_grouped_feature(df_feature = df_time[, 1:15],
 #'                    vec_label = whitestork_acc_sorted[,ncol(whitestork_acc_sorted)])
-plot_feature_grouped <- function(df_feature = NULL, vec_label = NULL,
+plot_grouped_feature <- function(df_feature = NULL, vec_label = NULL,
                                 geom = "boxplot") {
   if (is.null(df_feature)) {
     stop("Please provide a valid feature data.frame!")
