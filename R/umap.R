@@ -170,8 +170,8 @@ server <- function(input, output, session) {
             legend.text = ggplot2::element_text(size = 12, face = "bold"),
             legend.title = ggplot2::element_text(size = 15, face = "bold")) +
       ggplot2::guides(
-        color = guide_colorbar(order = 1, nbin = 60, draw.ulim = T, draw.llim = T),
-        shape = guide_legend(order = 0)
+        color = ggplot2::guide_colorbar(order = 1, nbin = 60, draw.ulim = T, draw.llim = T),
+        shape = ggplot2::guide_legend(order = 0)
       )
   }, height = function(){
     session$clientData$output_UMAP_feature_width * 0.7
