@@ -242,8 +242,8 @@ plot_confusion_matrix <- function(df = NULL, vec_label = NULL) {
                                       labels = unique(as.character(con_frame$obs)),
                                       sec.axis = ggplot2::dup_axis(labels = round(diagvalue*100/precisionvalue,2),
                                                           name = "Precision (%)")) +
-          ggplot2::labs(title = "Classificaiton confusion table plot")) +
-          ggplot2::theme(legend.title = ggplot2::element_blank())
+          ggplot2::labs(title = "Classificaiton confusion table plot") +
+          ggplot2::theme(legend.title = ggplot2::element_blank()))
   return(result_frame)
 }
 
