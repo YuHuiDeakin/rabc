@@ -213,8 +213,8 @@ plot_confusion_matrix <- function(df = NULL, vec_label = NULL) {
   }
   result_frame <- dplyr::arrange(result_frame, id)
   con_frame <- result_frame
-  con_frame$flag <- "False"
-  con_frame$flag[con_frame$obs == con_frame$pre] <- "True"
+  con_frame$flag <- "incorrect"
+  con_frame$flag[con_frame$obs == con_frame$pre] <- "correct"
   con_frame$flag <- as.factor(con_frame$flag)
   tf <- con_frame %>%
     dplyr::group_by(obs, pre) %>%
@@ -242,7 +242,8 @@ plot_confusion_matrix <- function(df = NULL, vec_label = NULL) {
                                       labels = unique(as.character(con_frame$obs)),
                                       sec.axis = ggplot2::dup_axis(labels = round(diagvalue*100/precisionvalue,2),
                                                           name = "Precision (%)")) +
-          ggplot2::labs(title = "Classificaiton confusion table plot"))
+          ggplot2::labs(title = "Classificaiton confusion table plot")) +
+          ggplot2::theme(length.title = ggplot2::element_blank())
   return(result_frame)
 }
 
