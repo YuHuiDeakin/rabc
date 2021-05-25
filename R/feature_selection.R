@@ -2,7 +2,7 @@
 #'
 #'Select a subset of relevant features for use in behaviour classification.
 #'
-#'@param df_feature A data.frame or tibble calculated by \code{calculate_feature_time} or
+#'@param df_feature A data.frame or tibble calculated by \code{calculate_feature_time} and/or
 #'  \code{calculate_feature_freq}.
 #'@param vec_label A character vector that contains all behaviour type labels.
 #'@param filter A logical value indicating whether to include filter function in
@@ -50,11 +50,20 @@ select_features <- function(df_feature = NULL, vec_label = NULL,
   if (is.null(df_feature)) {
     stop("Please provide a valid feature data.frame!")
   }
+
   if (is.null(vec_label)) {
     stop("Please provide a valid label vector!")
   }
 
-  if (filter == T) {
+  if (filter == TRUE & (cutoff > 1 | cutoff < 0)) {
+    stop("cutoff should be a numeric between 0 and 1.")
+  }
+
+  if (no_features > ncol(df_feature)) {
+    stop("no_feature should be equal to or less than the input number of features.")
+  }
+
+  if (filter == TRUE) {
     high_cor <- caret::findCorrelation(cor(df_feature), cutoff = cutoff)
     print(high_cor)
     df_feature <- df_feature[, !colnames(df_feature) %in% colnames(df_feature)[high_cor], drop = F]
@@ -127,7 +136,15 @@ select_features <- function(df_feature = NULL, vec_label = NULL,
 #'                          vec_label = whitestork_acc_sorted[,ncol(whitestork_acc_sorted)],
 #'                          no_features = 3)
 #'plot_selection_accuracy(results = results)
-plot_selection_accuracy <- function(results = results) {
+plot_selection_accuracy <- function(results = NULL) {
+  if (is.null(results)) {
+    stop("Please provide a valid results list calculated by function select_features.")
+  }
+
+  if (length(results) != 2) {
+    stop("Please provide a valid results list calculated by function select_features.")
+  }
+
   accuracy <- vector(mode = "double", length = length(results$features))
   for (i in 1:length(results$features)) {
     accuracy[i] <- results$result_mat[i, results$features[i]]
@@ -137,8 +154,8 @@ plot_selection_accuracy <- function(results = results) {
   df$accuracy_diff <- df$accuracy
   df$accuracy_diff[-1] <- diff(df$accuracy)
   ggplot2::ggplot(df, ggplot2::aes(x = feature, y = accuracy)) +
-    ggplot2::geom_point(shape = 1, size = 2, color = "red") +
-    ggplot2::geom_line(color = "red") +
+    ggplot2::geom_point(shape = 1, size = 2, color = "#661100") +
+    ggplot2::geom_line(color = "#661100") +
     ggplot2::geom_col(ggplot2::aes(x = feature, y = accuracy_diff), alpha = 0.5) +
     ggplot2::scale_x_continuous(breaks = 1:length(results$features),
                      labels = results$features) +

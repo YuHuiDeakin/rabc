@@ -22,6 +22,18 @@ order_acc <- function(df_raw = NULL) {
     stop("Please provide a valid data.frame!")
   }
 
+  if (!is.data.frame(df_raw)) {
+    stop("Please provide a valid data.frame!")
+  }
+
+  if (nrow(df_raw) == 0) {
+    return(df_raw)
+  }
+
+  if (!(is.character(df_raw[[ncol(df_raw)]]) | is.factor(df_raw[[ncol(df_raw)]]))) {
+    stop("Provide a valid data.frame with behaviour labels in last column.")
+  }
+
   df_ordered <- dplyr::arrange(df_raw, as.character(df_raw[[ncol(df_raw)]]))
 
   return(df_ordered)
@@ -63,6 +75,16 @@ plot_acc <- function(df_raw = NULL, axis_num = 3) {
     stop("Please provide a valid data.frame!")
   }
 
+  df_raw <- as.data.frame(order_acc(df_raw))
+
+  if (axis_num == 3 & (ncol(df_raw) - 1) %% 3 != 0 ) {
+    stop("Number of data column (not including the label column) should be three multiples.")
+  }
+
+  if (axis_num == 2 & (ncol(df_raw) - 1) %% 2 != 0 ) {
+    stop("Number of data column (not including the label column) should be two multiples.")
+  }
+
   row_num <- nrow(df_raw)
   col_num <- ncol(df_raw)
   val_range <- max(as.numeric(as.matrix(df_raw[, -col_num]))) -
@@ -71,10 +93,17 @@ plot_acc <- function(df_raw = NULL, axis_num = 3) {
     warning("Suggestion: transform raw data into 1g = 9.8 m/s2 for consistency")
   }
 
+  if (nrow(df_raw) > 10000) {
+    warning("Large dataset will be slow to plot. Alternative option is to segment
+            the dataset into smaller datasets for this function.")
+  }
+
+  df_raw <- as.data.frame(df_raw)
+
   if (axis_num == 3) {
-  sub_x <- df_raw[, seq(from = 1, to = col_num - 1, by = 3)]
-  sub_y <- df_raw[, seq(from = 2, to = col_num - 1, by = 3)]
-  sub_z <- df_raw[, seq(from = 3, to = col_num - 1, by = 3)]
+  sub_x <- df_raw[, seq(from = 1, to = col_num - 1, by = 3), drop = FALSE]
+  sub_y <- df_raw[, seq(from = 2, to = col_num - 1, by = 3), drop = FALSE]
+  sub_z <- df_raw[, seq(from = 3, to = col_num - 1, by = 3), drop = FALSE]
 
   vecsub_x <- as.vector(t(as.matrix(sub_x)))
   vecsub_y <- as.vector(t(as.matrix(sub_y)))
@@ -97,10 +126,10 @@ plot_acc <- function(df_raw = NULL, axis_num = 3) {
     dygraphs::dyRangeSelector() %>%
     dygraphs::dyEvent(cumsum(seplabel)/length(sub_x),
             unique(as.character(df_plot$label)), labelLoc = "bottom") %>%
-    dygraphs::dyOptions(colors = c("#B22222", "#228B22", "#4169E1"), colorSaturation = 0.5)
+    dygraphs::dyOptions(colors = c("#661100", "#117733", "#88CCEE"), colorSaturation = 0.5)
   } else if (axis_num == 2) {
-    sub_x <- df_raw[, seq(from = 1, to = col_num - 1, by = 2)]
-    sub_y <- df_raw[, seq(from = 2, to = col_num - 1, by = 2)]
+    sub_x <- df_raw[, seq(from = 1, to = col_num - 1, by = 2), drop = FALSE]
+    sub_y <- df_raw[, seq(from = 2, to = col_num - 1, by = 2), drop = FALSE]
 
     vecsub_x <- as.vector(t(as.matrix(sub_x)))
     vecsub_y <- as.vector(t(as.matrix(sub_y)))
@@ -122,9 +151,9 @@ plot_acc <- function(df_raw = NULL, axis_num = 3) {
       dygraphs::dyRangeSelector() %>%
       dygraphs::dyEvent(cumsum(seplabel)/length(sub_x),
               unique(as.character(df_plot$label)), labelLoc = "bottom") %>%
-      dygraphs::dyOptions(colors = c("#B22222", "#228B22"), colorSaturation = 0.5)
+      dygraphs::dyOptions(colors = c("#661100", "#117733"), colorSaturation = 0.5)
   } else if (axis_num == 1) {
-    sub_x <- df_raw[, seq(from = 1, to = col_num - 1, by = 1)]
+    sub_x <- df_raw[, seq(from = 1, to = col_num - 1, by = 1), drop = FALSE]
 
     vecsub_x <- as.vector(t(as.matrix(sub_x)))
 
@@ -145,7 +174,7 @@ plot_acc <- function(df_raw = NULL, axis_num = 3) {
       dygraphs::dyRangeSelector() %>%
       dygraphs::dyEvent(cumsum(seplabel)/length(sub_x),
               unique(as.character(df_plot$label)), labelLoc = "bottom") %>%
-      dygraphs::dyOptions(colors = c("#B22222"), colorSaturation = 0.5)
+      dygraphs::dyOptions(colors = c("#661100"), colorSaturation = 0.5)
   } else {
     stop("Please provide valid number of axis from 1, 2, or 3.")
   }
@@ -180,8 +209,17 @@ plot_feature <- function(df_feature = NULL, vec_label = NULL) {
   if (is.null(df_feature)) {
     stop("Please provide a valid feature data.frame!")
   }
+
   if (is.null(vec_label)) {
     stop("Please provide a valid label vector!")
+  }
+
+  if (nrow(df_feature) != length(vec_label)) {
+    stop("Number of rows of the feature data.frame should be the same as the length of label vector.")
+  }
+
+  if (is.unsorted(as.character(vec_label))) {
+    warning("Please make sure the features are calculated from sorted data by order_acc and provide the sorted labels here.")
   }
 
   df_feature$label <- as.factor(vec_label)
@@ -197,7 +235,7 @@ plot_feature <- function(df_feature = NULL, vec_label = NULL) {
     dygraphs::dyRangeSelector() %>%
     dygraphs::dyEvent(cumsum(seplabel),
             unique(as.character(df_feature$label)), labelLoc = "bottom") %>%
-    dygraphs::dyOptions(colors = rainbow(dim(df_feature)[2] - 2)) %>%
+    dygraphs::dyOptions(colors = rcartocolor::carto_pal(dim(df_feature)[2] - 2, "Safe")) %>%
     dygraphs::dyHighlight(highlightSeriesOpts = list(strokeWidth = 3))
 
 }
@@ -237,8 +275,17 @@ plot_grouped_feature <- function(df_feature = NULL, vec_label = NULL,
   if (is.null(df_feature)) {
     stop("Please provide a valid feature data.frame!")
   }
+
   if (is.null(vec_label)) {
     stop("Please provide a valid label vector!")
+  }
+
+  if (nrow(df_feature) != length(vec_label)) {
+    stop("Number of rows of the feature data.frame should be the same as the length of label vector.")
+  }
+
+  if (is.unsorted(as.character(vec_label))) {
+    warning("Please make sure the features are calculated from sorted data by order_acc and provide the sorted labels here.")
   }
 
   name_order <- names(df_feature)

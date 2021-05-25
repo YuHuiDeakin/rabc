@@ -8,7 +8,7 @@
 #' functions from the "caret" package to automatically conduct the three steps for
 #' model training and validation.
 #'
-#'@param df A data.frame or tibble contains features for classification.
+#'@param df_feature A data.frame or tibble contains features for classification.
 #'@param vec_label A character vector that contains all behaviour type labels.
 #'@param hyper_choice A character value. The default value is set to "defaults",
 #'  which will let the XGBoost model use a default hyperparameter set without further
@@ -32,22 +32,26 @@
 #'  best tuned hyperparameters.
 #'@examples
 #'final_model <- train_model(df_time, vec_label = whitestork_acc_sorted[,ncol(whitestork_acc_sorted)])
-train_model <- function(df = NULL, vec_label = NULL, hyper_choice = "defaults",
+train_model <- function(df_feature = NULL, vec_label = NULL, hyper_choice = "defaults",
                         train_ratio = 0.75) {
-  if (is.null(df)) {
+  if (is.null(df_feature)) {
     stop("Please provide a valid feature data.frame!")
   }
   if (is.null(vec_label)) {
     stop("Please provide a valid label vector!")
   }
 
+  if (train_ratio < 0 | train_ratio > 1) {
+    stop("train_ratio should be a numeric between 0 and 1.")
+  }
+
   vec_label <- as.factor(vec_label)
   set.seed(12321)
   train_index <- caret::createDataPartition(vec_label, p = train_ratio,
                                      list = FALSE)
-  train_data <- as.matrix(df[train_index, ])
+  train_data <- as.matrix(df_feature[train_index, ])
   train_label <- vec_label[train_index]
-  test_data <- as.matrix(df[-train_index, ])
+  test_data <- as.matrix(df_feature[-train_index, ])
   test_label <- vec_label[-train_index]
 
   if (hyper_choice == "defaults") {
@@ -78,7 +82,7 @@ train_model <- function(df = NULL, vec_label = NULL, hyper_choice = "defaults",
     confusion <- caret::confusionMatrix(predictions, test_label)
     print(confusion)
     print(caret::varImp(xgb_model))
-    xgb_return <- caret::train(as.matrix(df), vec_label,
+    xgb_return <- caret::train(as.matrix(df_feature), vec_label,
                                trControl = xgb_trcontrol,
                                tuneGrid = grid_default,
                                method = "xgbTree")
@@ -120,11 +124,13 @@ train_model <- function(df = NULL, vec_label = NULL, hyper_choice = "defaults",
       min_child_weight = 1,
       subsample = 1
     )
-    xgb_return <- caret::train(as.matrix(df), vec_label,
+    xgb_return <- caret::train(as.matrix(df_feature), vec_label,
                                trControl = xgb_trcontrol,
                                tuneGrid = grids_full,
                                method = "xgbTree")
     return(xgb_return)
+  } else {
+    stop("Provide a valid hyper_choice.")
   }
 
 }
@@ -136,7 +142,7 @@ train_model <- function(df = NULL, vec_label = NULL, hyper_choice = "defaults",
 #'Plot classification result confusion table and return classification result
 #'data.frame.
 #'
-#'@param df A data.frame or tibble contains the feature set for classification
+#'@param df_feature A data.frame or tibble contains the feature set for classification
 #'@param vec_label A character vector that contains all behaviour type labels.
 #'
 #'@details In this function, input dataset will be randomly partitioned into 5
@@ -156,10 +162,10 @@ train_model <- function(df = NULL, vec_label = NULL, hyper_choice = "defaults",
 #'as the input "vec_label".
 #'
 #'@examples
-#'pred <- plot_confusion_matrix(df = df_time, vec_label = label_vec)
+#'pred <- plot_confusion_matrix(df_feature = df_time, vec_label = label_vec)
 #'head(pred)
-plot_confusion_matrix <- function(df = NULL, vec_label = NULL) {
-  if (is.null(df)) {
+plot_confusion_matrix <- function(df_feature = NULL, vec_label = NULL) {
+  if (is.null(df_feature)) {
     stop("Please provide a valid feature data.frame!")
   }
   if (is.null(vec_label)) {
@@ -190,9 +196,9 @@ plot_confusion_matrix <- function(df = NULL, vec_label = NULL) {
   )
 
   for (i in 1:No_folds) {
-    train_data <- as.matrix(df[-cv_splits[[i]], ])
+    train_data <- as.matrix(df_feature[-cv_splits[[i]], ])
     train_label <- vec_label[-cv_splits[[i]]]
-    test_data <- as.matrix(df[cv_splits[[i]], ])
+    test_data <- as.matrix(df_feature[cv_splits[[i]], ])
     test_label <- vec_label[cv_splits[[i]]]
 
     xgb_model <- caret::train(train_data, train_label,
@@ -229,9 +235,9 @@ plot_confusion_matrix <- function(df = NULL, vec_label = NULL) {
   recallvalue <- (tempdf %>% dplyr::group_by(obs) %>% dplyr::summarise(total = sum(N)))$total
   precisionvalue <- (tempdf %>% dplyr::group_by(pre) %>% dplyr::summarise(total = sum(N)))$total
   print(ggplot2::ggplot(con_frame, ggplot2::aes(x = as.numeric(obs), y = as.numeric(pre),
-                                       color = flag, label = N)) +
-          ggplot2::geom_jitter(width = 0.2, height = 0.2, size = 0.7) +
-          ggplot2::geom_text(nudge_x = 0.3, nudge_y = -0.3, show.legend = FALSE) +
+                                      label = N)) +
+          ggplot2::geom_jitter(aes(color = flag), width = 0.2, height = 0.2, size = 0.7) +
+          ggplot2::geom_text(aes(color = flag), nudge_x = 0.3, nudge_y = -0.3, show.legend = FALSE) +
           ggplot2::scale_x_continuous(name = "Observations",
                                       breaks = 1:length(levels(con_frame$obs)),
                                       labels = unique(as.character(con_frame$obs)),
@@ -242,7 +248,8 @@ plot_confusion_matrix <- function(df = NULL, vec_label = NULL) {
                                       labels = unique(as.character(con_frame$obs)),
                                       sec.axis = ggplot2::dup_axis(labels = round(diagvalue*100/precisionvalue,2),
                                                           name = "Precision (%)")) +
-          ggplot2::labs(title = "Classificaiton confusion table plot") +
+          ggplot2::scale_color_manual(values = c("#117733", "#CC6677")) +
+          ggplot2::labs(title = "Classification confusion table plot") +
           ggplot2::theme(legend.title = ggplot2::element_blank()))
   return(result_frame)
 }
@@ -269,14 +276,19 @@ plot_confusion_matrix <- function(df = NULL, vec_label = NULL) {
 #'@return NULL
 #'
 #'@examples
-#'pred <- plot_confusion_matrix(df = df_time, vec_label = label_vec)
+#'pred <- plot_confusion_matrix(df_feature = df_time, vec_label = label_vec)
 #'plot_wrong_classifications(whitestork_acc_sorted, df_result = pred)
 plot_wrong_classifications <- function(df_raw = NULL, axis_num = 3, df_result = NULL) {
   if (is.null(df_raw)) {
     stop("Please provide a valid data.frame!")
   }
+
   if (is.null(df_result)) {
     stop("Please provide a valid data.frame!")
+  }
+
+  if (!identical(as.character(df_raw[, ncol(df_raw)]), as.character(df_result$obs))) {
+    stop("Check if labels of df_raw match the df_result$obs.")
   }
 
   row_num <- nrow(df_raw)
@@ -289,10 +301,12 @@ plot_wrong_classifications <- function(df_raw = NULL, axis_num = 3, df_result = 
 
   wrong_ind <- which(df_result[[1]] != df_result[[2]])
 
+  df_raw <- as.data.frame(df_raw)
+
   if (axis_num == 3) {
-    sub_x <- df_raw[, seq(from = 1, to = col_num - 1, by = 3)]
-    sub_y <- df_raw[, seq(from = 2, to = col_num - 1, by = 3)]
-    sub_z <- df_raw[, seq(from = 3, to = col_num - 1, by = 3)]
+    sub_x <- df_raw[, seq(from = 1, to = col_num - 1, by = 3), drop = FALSE]
+    sub_y <- df_raw[, seq(from = 2, to = col_num - 1, by = 3), drop = FALSE]
+    sub_z <- df_raw[, seq(from = 3, to = col_num - 1, by = 3), drop = FALSE]
 
     vecsub_x <- as.vector(t(as.matrix(sub_x)))
     vecsub_y <- as.vector(t(as.matrix(sub_y)))
@@ -315,12 +329,12 @@ plot_wrong_classifications <- function(df_raw = NULL, axis_num = 3, df_result = 
       dygraphs::dyRangeSelector() %>%
       dygraphs::dyEvent(cumsum(seplabel)/length(sub_x),
                         unique(as.character(df_plot$label)), labelLoc = "bottom") %>%
-      dygraphs::dyOptions(colors = c("#B22222", "#228B22", "#4169E1"), colorSaturation = 0.5) %>%
+      dygraphs::dyOptions(colors = c("#661100", "#117733", "#88CCEE"), colorSaturation = 0.5) %>%
       dygraphs::dyEvent(wrong_ind, as.character(df_result[[2]][wrong_ind]),
                         labelLoc = "top", strokePattern = "dotted", color = "grey")
   } else if (axis_num == 2) {
-    sub_x <- df_raw[, seq(from = 1, to = col_num - 1, by = 2)]
-    sub_y <- df_raw[, seq(from = 2, to = col_num - 1, by = 2)]
+    sub_x <- df_raw[, seq(from = 1, to = col_num - 1, by = 2), drop = FALSE]
+    sub_y <- df_raw[, seq(from = 2, to = col_num - 1, by = 2), drop = FALSE]
 
     vecsub_x <- as.vector(t(as.matrix(sub_x)))
     vecsub_y <- as.vector(t(as.matrix(sub_y)))
@@ -342,11 +356,11 @@ plot_wrong_classifications <- function(df_raw = NULL, axis_num = 3, df_result = 
       dygraphs::dyRangeSelector() %>%
       dygraphs::dyEvent(cumsum(seplabel)/length(sub_x),
                         unique(as.character(df_plot$label)), labelLoc = "bottom") %>%
-      dygraphs::dyOptions(colors = c("#B22222", "#228B22"), colorSaturation = 0.5) %>%
+      dygraphs::dyOptions(colors = c("#661100", "#117733"), colorSaturation = 0.5) %>%
       dygraphs::dyEvent(wrong_ind, as.character(df_result[[2]][wrong_ind]),
                         labelLoc = "top", strokePattern = "dotted", color = "grey")
   } else if (axis_num == 1) {
-    sub_x <- df_raw[, seq(from = 1, to = col_num - 1, by = 1)]
+    sub_x <- df_raw[, seq(from = 1, to = col_num - 1, by = 1), drop = FALSE]
 
     vecsub_x <- as.vector(t(as.matrix(sub_x)))
 
@@ -367,7 +381,7 @@ plot_wrong_classifications <- function(df_raw = NULL, axis_num = 3, df_result = 
       dygraphs::dyRangeSelector() %>%
       dygraphs::dyEvent(cumsum(seplabel)/length(sub_x),
                         unique(as.character(df_plot$label)), labelLoc = "bottom") %>%
-      dygraphs::dyOptions(colors = c("#B22222"), colorSaturation = 0.5) %>%
+      dygraphs::dyOptions(colors = c("#661100"), colorSaturation = 0.5) %>%
       dygraphs::dyEvent(wrong_ind, as.character(df_result[[2]][wrong_ind]),
                         labelLoc = "top", strokePattern = "dotted", color = "grey")
   } else {

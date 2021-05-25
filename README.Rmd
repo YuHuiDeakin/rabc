@@ -1,0 +1,46 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# rabc
+
+<!-- badges: start -->
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+<!-- badges: end -->
+
+The goal of rabc is to facilitate the development of animal behaviour classification models using accelerometer data.
+
+## Installation
+
+You can install the development version from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("YuHuiDeakin/rabc")
+```
+## Workflow of the package
+
+Here is the function workflow of the package:
+
+![](rabc Diagram.jpeg)
+
+## Example
+
+This is a basic example which shows you how to solve a common problem:
+
+```{r example}
+library(rabc)
+## basic example code
+```
+

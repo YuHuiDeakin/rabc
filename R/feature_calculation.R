@@ -14,7 +14,7 @@
 #'more details. Here, ODBA were calculated into mean value of the behaviour
 #'segementation. Note that this function doesn't give inclusive calculations of all
 #'potentially valuable time domain features and since it is asserted that feature
-#'engineering plays and important part of machine learning model's success, more
+#'engineering plays an important part of machine learning model's success, more
 #'customized features could also be calculated by users. A review reference - Brown
 #'et al. 2013 doi:10.1186/2050-3385-1-20 - provides more potential features. One could
 #'also reference feature engineering for human wearable devices which partly use
@@ -54,6 +54,27 @@ calculate_feature_time <- function(df_raw = NULL, winlen_dba, axis_num = 3) {
     stop("Please provide a valid data.frame!")
   }
 
+  if (!exists("winlen_dba")) {
+    stop("Provide a valid winlen_dba")
+  }
+
+  if (!is.numeric(winlen_dba)) {
+    stop("Winlen_dba should be a number")
+  }
+
+  if (axis_num == 3 & (ncol(df_raw) - 1) %% 3 != 0 ) {
+    stop("Number of data column (not including the label column) should be three multiples.")
+  }
+
+  if (axis_num == 2 & (ncol(df_raw) - 1) %% 2 != 0 ) {
+    stop("Number of data column (not including the label column) should be two multiples.")
+  }
+
+  if (is.unsorted(as.character(df_raw[, ncol(df_raw)]))) {
+    warning("This function expect the input data sorted by function order_acc.")
+  }
+
+
   row_num <- dim(df_raw)[[1]]
   col_num <- dim(df_raw)[[2]]
   val_range <- max(as.numeric(as.matrix(df_raw[, -col_num]))) -
@@ -61,6 +82,8 @@ calculate_feature_time <- function(df_raw = NULL, winlen_dba, axis_num = 3) {
   if (val_range > 16 | val_range < 2) {
     warning("Suggestion: transform raw data into 1g = 9.8 m/s2 for consistency")
   }
+
+  df_raw <- as.data.frame(df_raw)
 
   if (axis_num == 3) {
   sub_x <- df_raw[, seq(from = 1, to = col_num - 1, by = 3)]
@@ -261,6 +284,26 @@ calculate_feature_freq <- function(df_raw = NULL, samp_freq, axis_num = 3) {
     stop("Please provide a valid data.frame!")
   }
 
+  if (!exists("samp_freq")) {
+    stop("Provide a valid samp_freq")
+  }
+
+  if (!is.numeric(samp_freq)) {
+    stop("Samp_freq should be a number")
+  }
+
+  if (axis_num == 3 & (ncol(df_raw) - 1) %% 3 != 0 ) {
+    stop("Number of data column (not including the label column) should be three multiples.")
+  }
+
+  if (axis_num == 2 & (ncol(df_raw) - 1) %% 2 != 0 ) {
+    stop("Number of data column (not including the label column) should be two multiples.")
+  }
+
+  if (is.unsorted(as.character(df_raw[, ncol(df_raw)]))) {
+    warning("This function expect the input data sorted by function order_acc.")
+  }
+
   row_num <- dim(df_raw)[[1]]
   col_num <- dim(df_raw)[[2]]
   val_range <- max(as.numeric(as.matrix(df_raw[, -col_num]))) -
@@ -268,6 +311,8 @@ calculate_feature_freq <- function(df_raw = NULL, samp_freq, axis_num = 3) {
   if (val_range > 16 | val_range < 2) {
     warning("Suggestion: transform raw data into 1g = 9.8 m/s2 for consistency")
   }
+
+  df_raw <- as.data.frame(df_raw)
 
   if (axis_num == 3) {
   sub_x <- df_raw[, seq(from = 1, to = col_num - 1, by = 3)]
