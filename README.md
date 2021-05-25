@@ -7,6 +7,9 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![Travis build
+status](https://travis-ci.com/YuHuiDeakin/rabc.svg?branch=master)](https://travis-ci.com/YuHuiDeakin/rabc)
+[![R-CMD-check](https://github.com/YuHuiDeakin/rabc/workflows/R-CMD-check/badge.svg)](https://github.com/YuHuiDeakin/rabc/actions)
 <!-- badges: end -->
 
 The goal of rabc is to facilitate the development of animal behaviour
