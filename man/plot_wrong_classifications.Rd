@@ -26,6 +26,6 @@ predictions in the data.frame from \code{result_check} are denoted with dotted
 line annotated with the predicted behaviour label on top.
 }
 \examples{
-pred <- plot_confusion_matrix(df = df_time, vec_label = label_vec)
+pred <- plot_confusion_matrix(df_feature = df_time, vec_label = label_vec)
 plot_wrong_classifications(whitestork_acc_sorted, df_result = pred)
 }

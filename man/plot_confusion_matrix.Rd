@@ -4,10 +4,10 @@
 \alias{plot_confusion_matrix}
 \title{Classification result check}
 \usage{
-plot_confusion_matrix(df = NULL, vec_label = NULL)
+plot_confusion_matrix(df_feature = NULL, vec_label = NULL)
 }
 \arguments{
-\item{df}{A data.frame or tibble contains the feature set for classification}
+\item{df_feature}{A data.frame or tibble contains the feature set for classification}
 
 \item{vec_label}{A character vector that contains all behaviour type labels.}
 }
@@ -34,6 +34,6 @@ denotes predictions. Dots are colored according to classification results. The
 annotated numbers are number of cases in each observation and prediction group.
 }
 \examples{
-pred <- plot_confusion_matrix(df = df_time, vec_label = label_vec)
+pred <- plot_confusion_matrix(df_feature = df_time, vec_label = label_vec)
 head(pred)
 }

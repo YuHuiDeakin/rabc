@@ -313,8 +313,9 @@ plot_grouped_feature <- function(df_feature = NULL, vec_label = NULL,
         ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
       print(p) } else if (geom == "density") {
         p <- ggplot2::ggplot(df_sub, ggplot2::aes(x = Values, fill = label)) +
-          ggplot2::geom_density(alpha = 0.6) +
-          ggplot2::scale_fill_brewer(palette = "Set1") +
+          ggplot2::geom_density(alpha = 0.7) +
+          rcartocolor::scale_fill_carto_d(palette = "Safe") +
+          #ggplot2::scale_fill_brewer(palette = "Set1") +
           ggplot2::facet_wrap("features", nrow = 3, ncol = 3, scales = "free")
         print(p)
       } else if (geom == "violin") {

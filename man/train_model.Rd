@@ -5,14 +5,14 @@
 \title{Model training and validation}
 \usage{
 train_model(
-  df = NULL,
+  df_feature = NULL,
   vec_label = NULL,
   hyper_choice = "defaults",
   train_ratio = 0.75
 )
 }
 \arguments{
-\item{df}{A data.frame or tibble contains features for classification.}
+\item{df_feature}{A data.frame or tibble contains features for classification.}
 
 \item{vec_label}{A character vector that contains all behaviour type labels.}
 

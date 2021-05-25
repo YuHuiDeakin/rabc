@@ -45,7 +45,7 @@ in many studies, see Wilson et al. 2006 doi: 10.1111/j.1365-2656.2006.01127.x fo
 more details. Here, ODBA were calculated into mean value of the behaviour
 segementation. Note that this function doesn't give inclusive calculations of all
 potentially valuable time domain features and since it is asserted that feature
-engineering plays and important part of machine learning model's success, more
+engineering plays an important part of machine learning model's success, more
 customized features could also be calculated by users. A review reference - Brown
 et al. 2013 doi:10.1186/2050-3385-1-20 - provides more potential features. One could
 also reference feature engineering for human wearable devices which partly use

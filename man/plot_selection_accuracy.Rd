@@ -4,7 +4,7 @@
 \alias{plot_selection_accuracy}
 \title{Feature selection accuracy plot}
 \usage{
-plot_selection_accuracy(results = results)
+plot_selection_accuracy(results = NULL)
 }
 \arguments{
 \item{results}{A list. It should be the returned list of function \code{select_features}.}

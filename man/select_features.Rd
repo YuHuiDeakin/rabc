@@ -14,7 +14,7 @@ select_features(
 )
 }
 \arguments{
-\item{df_feature}{A data.frame or tibble calculated by \code{calculate_feature_time} or
+\item{df_feature}{A data.frame or tibble calculated by \code{calculate_feature_time} and/or
 \code{calculate_feature_freq}.}
 
 \item{vec_label}{A character vector that contains all behaviour type labels.}

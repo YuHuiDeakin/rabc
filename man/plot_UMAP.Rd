@@ -4,7 +4,7 @@
 \alias{plot_UMAP}
 \title{UMAP visualization}
 \usage{
-plot_UMAP()
+plot_UMAP(df_time = NULL, df_freq = NULL, label_vec = NULL)
 }
 \description{
 UMAP - Uniform Manifold Approximation and Projection. UMAP is a tool to embed
@@ -27,5 +27,10 @@ feature set, a data.frame or tibble) and "label_vec" (corresponding behaviours,
 a character vector) exist.
 }
 \examples{
-plot_UMAP()
+data(whitestork_acc)
+whitestork_acc_sorted <- order_acc(whitestork_acc)
+df_time <- calculate_feature_time(whitestork_acc_sorted, winlen_dba = 11)
+df_freq <- calculate_feature_freq(whitestork_acc_sorted, samp_freq = 10.54)
+labels <- whitestork_acc_sorted[, 121]
+plot_UMAP(df_time, df_freq, labels)
 }
