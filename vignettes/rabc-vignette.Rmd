@@ -49,7 +49,7 @@ Visualising the raw ACC data provides the user a convenient impression of how th
 
 ```{r warning=FALSE}
 data("whitestork_acc")
-#The white stork (Ciconia ciconia) tri-axial accelerometer data (reference: <http://accapp.move-ecol-minerva.huji.ac.il/demo/>) was measured at 10.54 Hz. 40 tri-axial measurements, totalling 3.8 seconds, were used to form a segment. The dataset includes 1746  segments each forming a row in the dataset. Each row contains 121 columns. The first 120 columns are accelerometer measurements from three orthogonal axes, arranged as x,y,z,x,y,z,...,x,y,z. The final column is of type character containing the behaviour type. The data set contains 5 different behaviours including "A_FLIGHT" - active flight (77 cases), "P_FLIGHT" - passive filght (96), "WALK" - walking (437), "STND" - standing (863), "SITTING" - resting (273). 
+#The white stork (Ciconia ciconia) tri-axial accelerometer data (reference: #<http://accapp.move-ecol-minerva.huji.ac.il/demo/>) was measured at 10.54 Hz. 40 tri-axial #measurements, totalling 3.8 seconds, were used to form a segment. The dataset includes 1746  #segments each forming a row in the dataset. Each row contains 121 columns. The first 120 columns are #accelerometer measurements from three orthogonal axes, arranged as x,y,z,x,y,z,...,x,y,z. The final #column is of type character containing the behaviour type. The data set contains 5 different #behaviours including "A_FLIGHT" - active flight (77 cases), "P_FLIGHT" - passive filght (96), "WALK" #- walking (437), "STND" - standing (863), "SITTING" - resting (273). 
 whitestork_acc_sorted <- order_acc(df_raw = whitestork_acc) #sort the data by hebaviour
 ```
 
@@ -70,7 +70,7 @@ plot_acc(df_raw = dplyr::bind_cols(whitestork_acc_sorted[, seq(3,121,by = 3)],
 
 In some cases, the accelerometer data are not organized as the data format required by **rabc** package. Here is an example to transform a dummy data frame into the **rabc** data format and display.
 
-```{r echo=TRUE}
+```{r echo=TRUE, warning=FALSE, fig.align='center', out.width="90%", fig.cap="Figure 4. Dynamic graph of dummy ACC data."}
 library(lubridate)
 
 time_start <- ymd_hms("2021-04-20 12:00:00")
@@ -112,9 +112,7 @@ Note that the feature_time function does not provide an exhaustive list of poten
 
 ```{r cache=TRUE, warning=FALSE}
 df_time <- calculate_feature_time(df_raw = whitestork_acc_sorted, winlen_dba = 11)
-label_vec <- whitestork_acc_sorted$V121
-head(df_time)
-summary(df_time)
+head(df_time, n = 2)
 ```
 
 Function **calculate_feature_freq** calculates the basic frequency domain features: *main frequency*, *main amplitude* and *frequency entropy*. *Frequency entropy* is a measure of unpredictability of the signal. For example, when an animal is engaging in a rhythmic behaviour, such a stork using active (i.e. flapping) flight, future ACC signals can be predicted from current ACC signals with considerable accuracy. Contrastingly, when an animal is engaging in behaviour with more unpredictable movements, such as foraging in the case of the stork, the entropy value will be higher (see <https://en.wikipedia.org/wiki/Entropy_(information_theory)> for more information). As for the time-domain features, also the frequency-domain features are calculated for each segment and each ACC axis separately (denoted with prefix x, y, z). Calculations of these features are based on fast fourier transformation of the raw ACC data. In the **calculate_feature_freq**  function the required argument *samp_freq* denotes the sampling frequency of the ACC in Hz.
@@ -123,8 +121,7 @@ It is worth noting that if segment lengths are too short and/or sampling frequen
 
 ```{r cache=TRUE, warning=FALSE}
 df_freq <- calculate_feature_freq(df_raw = whitestork_acc_sorted, samp_freq = 10.54)
-head(df_freq)
-summary(df_freq)
+head(df_freq, n = 2)
 ```
 
 There are 28 features calculated by functions **calculate_feature_time** and **calculate_feature_freq**. Users can develop additional features if deemed necessary. Here is an example to calculate additional features with the data *whitestork_acc_sorted*.
@@ -156,6 +153,7 @@ cor_xz <- sapply(1:nrow(whitestork_acc_sorted), function(i) cor(matsub_x[i,], ma
 df_custom <- data.frame(skew_x, skew_y, skew_z,
                         cor_xy, cor_yz, cor_xz)
 
+head(df_custom)
 ```
 ## Feature selection
 
@@ -167,10 +165,11 @@ The purpose of the wrapper is to select most relevant features. The wrapper part
 
 The **select_features** function will return a list of which the first member (i.e., [[1]]) contains a matrix providing the classification accuracy for each of the features (columns) across all steps (rows, top row being first step) of the SFS process. Once a feature is selected into the selected feature set, the remaining values in this feature’s column are set to zero. The second member of the list (i.e., [[2]]) contains the names of the selected features in the order in which they were selected in the SFS process. The development of the classification accuracy with each step in the SFS process is plotted with function **plot_selection_accuracy**. In addition, **select_features** function can also work with custom calculated features.
 
-```{r cache=TRUE, dev='jpeg', warning=FALSE, fig.align='center', out.width="100%", dpi=600, fig.cap="Figure 4. The accuracy plot of selected features. Line and dots in the plot denotes classification accuracies of accumulated selected features. Grey bars indicate accuracy increase (labeled with numbers) of each selected feature."}
-selection <- select_features(df_feature = df_time,
+```{r cache=TRUE, warning=FALSE, fig.align='center', out.width="100%", fig.cap="Figure 5. The accuracy plot of selected features. Line and dots in the plot denotes classification accuracies of accumulated selected features. Grey bars indicate accuracy increase (labeled with numbers) of each selected feature."}
+label_vec <- whitestork_acc_sorted$V121
+selection <- select_features(df_feature = cbind(df_time, df_freq), 
                             vec_label = label_vec, filter = FALSE,
-                            no_features = 6)
+                            no_features = 10)
 # the custom features can also be used in select_features function by replacing the argument df_feature = dplyr::bind_cols(df_time, df_freq, df_custom)
 selection[[1]] 
 selection[[2]]
@@ -191,37 +190,27 @@ We will start off with the two methods where features are inspected in isolation
 
 Similar to ACC data visualization, function **plot_feature** allows users to generate a visual impression of the feature values by behaviour types, where the x axis of the graph indicates the row sequence number of the sorted dataset. This function can also work with custom calculated features. 
 
-Before calling function **plot_feature**, all behaviours in the sorted ACC dataset need to be drawn together.
+```{r cache=TRUE, warning=FALSE, fig.align="center", out.width="90%", fig.cap="Figure 6. Mean values of three axes sequence plot."}
 
-```{r cache=TRUE, warning=FALSE, fig.align="center", out.width="90%", fig.cap="Figure 5. All time domain features sequence plot."}
-label_vec <- whitestork_acc_sorted[, ncol(whitestork_acc_sorted)]
-#assign behaviour labels to a vector
-
-plot_feature(df_feature = df_time, vec_label = label_vec)
+plot_feature(df_feature = df_time[, grep("mean", names(df_time))], vec_label = label_vec)
 
 #plot custom calculated features
 #plot_feature(df_feature  = df_custom, vec_label = label_vec)
-```
-
-The plot containing all time domain features simultaneously can be overwhelming. However, one can also plot a subset of these features. For example:
-
-```{r warning=FALSE, fig.align="center", out.width="90%", fig.cap="Figure 6. Mean values of three axes sequence plot."}
-plot_feature(df_feature = df_time[, grep("mean", names(df_time))], vec_label = label_vec)
 ```
 
 ### Features group visualization
 
 The function **plot_grouped_feature** generates feature distributions grouped by behaviour types. The distributions can be plotted as density plots and as boxplots (also violin plots). When one or more features have very dissimilar distributions between behaviours, these features have great potential to be of value in behaviour classification modelling. Conversely, when features have very similar distributions across behaviours, they can hardly contribute to a behaviour classification model.This function can also work with custom calculated features.
 
-```{r warning=FALSE, fig.align="center", out.width="90%", fig.cap="Figure 7. Density plots of all time domain features."}
-plot_grouped_feature(df_feature = df_time, vec_label = label_vec, geom = "density")
+```{r warning=FALSE, fig.align="center", out.width="100%", fig.cap="Figure 7. Density plots of 9 time domain features."}
+plot_grouped_feature(df_feature = df_time[, c(1:2, 10:15, 19)], vec_label = label_vec, geom = "density")
 
 #plot grouped custom calculated features
 #plot_grouped_feature(df_feature = df_custom, vec_label = label_vec, geom = "violin")
 ```
 
-```{r warning=FALSE, fig.align="center", out.width="100%", fig.cap="Figure 8. Boxplots of all time domain features."}
-plot_grouped_feature(df_feature = df_time, vec_label = label_vec, geom = "boxplot")
+```{r warning=FALSE, fig.align="center", out.width="100%", fig.cap="Figure 8. Boxplots of 9 time domain features."}
+plot_grouped_feature(df_feature = df_time[, c(1:2, 10:15, 19)], vec_label = label_vec, geom = "boxplot")
 ```
 
 In many of the density plots we observe clearly different distributions for the various behaviours, (e.g. in *y_mean, y_max, z_max,y_min, Z_min, ODBA*) which make these features potentially good  candidates for behaviour classification modelling. In *x_mean* we oddly observe two peaks in each of the five behaviours. In the white stork dataset, which was collected using backpack ACCs, x represents the horizontal axis perpendicular to the direction of the spine (i.e. the “sway axis”). The remarkable two-peak distributions in *x_mean* may therefore result from a-central positioning of the ACCs, some backpacks being positioned slightly to the left of the spine and others slightly to the right. In this case, we should therefore be cautious with including features from the x axis in a behaviour classification model.
@@ -238,9 +227,10 @@ Uniform manifold approximation and projection (UMAP) is a very powerful nonlinea
 
 Before calling UMAP, one should make sure that variables "*df_time*" (time domain feature set, a data.frame or tibble), "*df_freq*" (frequency domain feature set, a data.frame or tibble) and "*label_vec*" (corresponding behaviours, a character vector) exist. The current version of **rabc** package does not support custom calculated features in UMAP visualization yet. However, here is one example to plot UMAP with custom features. 
 
-```{r echo=TRUE, out.width="90%"}
+```{r echo=TRUE, fig.align="center", out.width="100%", fig.cap="Figure 9. UMAP plot of combination of time domain, frequency domain and custom features."}
 library(umap)
 library(ggplot2)
+library(rcartocolor)
 
 df_feature <- dplyr::bind_cols(df_time, df_freq, df_custom)
 
@@ -251,20 +241,21 @@ ggplot(umap_df, aes(x = V1, y = V2, color = labels)) +
   geom_point(alpha = 0.8) +
   xlab("UMAP_dimension_1") +
   ylab("UMAP_dimension_2") +
-  scale_color_brewer(palette = "Set1") #+
-  # theme(axis.text.x = element_text(size = 12, face = "bold"),
-  #       axis.text.y = element_text(size = 12, face = "bold"),
-  #       axis.title.x = element_text(size = 14, face = "bold"),
-  #       axis.title.y = element_text(size = 14, face = "bold"),
-  #       legend.text = element_text(size = 12, face = "bold"),
-  #       legend.title = element_text(size = 15, face = "bold"))
+  rcartocolor::scale_color_carto_d(palette = "Safe") +
+  #scale_color_brewer(palette = "Set1") +
+  theme(axis.text.x = element_text(size = 12, face = "bold"),
+        axis.text.y = element_text(size = 12, face = "bold"),
+        axis.title.x = element_text(size = 14, face = "bold"),
+        axis.title.y = element_text(size = 14, face = "bold"),
+        legend.text = element_text(size = 12, face = "bold"),
+        legend.title = element_text(size = 15, face = "bold"))
 ```
 
 The UMAP in **rabc** package is called using function:
 
 ```{r echo=TRUE}
 #not run
-#plot_UMAP()
+#plot_UMAP(df_time = df_time, df_freq = df_freq, label_vec = label_vec)
 ```
 
 For this tutorial, there is an example online shiny app of **plot_umap** - <https://huiyu-deakin.shinyapps.io/rabc_UMAP/>.
@@ -336,7 +327,7 @@ mean(predicted_test == test_data$label)
 
 Another way of calculating and visualising the performance of the behavioural classification model makes use of cross-validation using function **plot_confusion_matrix**. In this case the entire data set is randomly partitioned into five parts. In five consecutive steps, each of the five parts is used as a validation set, while the remaining four parts are used for model training. This procedure thus resembles a five-fold “classification model training and validation” with a *train_ratio* of 0.8, be it that in this case the data set is systematically divided and each point in the data set is being used for the validation process at some point (see function createFolds in "caret" for more details). Thus, after all five training and validation rounds, all behavioural observations will also have an associated predicted behaviour, which are being stored in the data frame that is being returned by **plot_confusion_matrix** in addition to a plot of the confusion table. 
 
-```{r cache=TRUE, warning=FALSE, fig.align="center", out.width="90%", fig.cap="Figure 9. Confusion matrix plot of 5-fold cross-validation results. The dots in the graph are coloured according to the classification results, with blue and red symbols being correct and incorrect classifications, respectively. Number of each observation and prediction pair are labelled."}
+```{r cache=TRUE, warning=FALSE, fig.align="center", out.width="90%", fig.cap="Figure 10. Confusion matrix plot of 5-fold cross-validation results. The dots in the graph are coloured according to the classification results, with blue and red symbols being correct and incorrect classifications, respectively. Number of each observation and prediction pair are labelled."}
 pred <- plot_confusion_matrix(df = df_time, vec_label = label_vec)
 #head(pred)#the first six lines of the returned data frame
 ```
@@ -345,7 +336,7 @@ pred <- plot_confusion_matrix(df = df_time, vec_label = label_vec)
 
 Using the predictions from the behaviour classification model, we can now return to the original ACC data to evaluate which ACC signals lead to correct and incorrect classifications using function **plot_confusion_matrix**. This function basically uses the same digraph with near identical look to function **plot_acc** used earlier. The only deviation is that all correct and incorrect predictions (identified using the data frame from function **plot_confusion_matrix**) are now identified with a solid and a dotted line, respectively, and annotated with labels for the observed and predicted behaviours at the bottom and top of the graph respectively. 
 
-```{r warning=FALSE, fig.align="center", out.width="90%", fig.cap="Figure 10. Wrong predictions plotted on dynamic graph of ACC data."}
+```{r warning=FALSE, fig.align="center", out.width="90%", fig.cap="Figure 11. Wrong predictions plotted on dynamic graph of ACC data."}
 plot_wrong_classifications(whitestork_acc_sorted, df_result = pred)
 ```
 
