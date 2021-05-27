@@ -35,7 +35,8 @@ Imports:
     umap,
     caret,
     e1071,
-    rcartocolor
+    rcartocolor,
+    kernlab
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
