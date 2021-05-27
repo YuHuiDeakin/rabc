@@ -7,9 +7,6 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![Travis build
-status](https://travis-ci.com/YuHuiDeakin/rabc.svg?branch=master)](https://travis-ci.com/YuHuiDeakin/rabc)
-[![R-CMD-check](https://github.com/YuHuiDeakin/rabc/workflows/R-CMD-check/badge.svg)](https://github.com/YuHuiDeakin/rabc/actions)
 <!-- badges: end -->
 
 The goal of rabc is to facilitate the development of animal behaviour
@@ -40,7 +37,16 @@ This is a basic example which shows you how to solve a common problem:
 library(rabc)
 ## basic example code
 
+## order data by behaviour labels 
 whitestork_acc_sorted <- order_acc(whitestork_acc)
-#df_time <- calculate_feature_time(whitestork_acc_sorted, winlen_dba = 11)
-#plot_confusion_matrix(df_time, vec_label = whitestork_acc_sorted$V121)
+
+## calculate ACC data into time domain features
+df_time <- calculate_feature_time(whitestork_acc_sorted, winlen_dba = 11)
+#> Warning in calculate_feature_time(whitestork_acc_sorted, winlen_dba = 11):
+#> Suggestion: transform raw data into 1g = 9.8 m/s2 for consistency
+
+## use time domain features to train a model and output results
+predictions <- plot_confusion_matrix(df_time, vec_label = whitestork_acc_sorted$V121)
 ```
+
+<img src="man/figures/README-example-1.png" width="100%" />

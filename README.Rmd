@@ -1,5 +1,6 @@
 ---
 output: github_document
+always_allow_html: true
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -17,8 +18,6 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![Travis build status](https://travis-ci.com/YuHuiDeakin/rabc.svg?branch=master)](https://travis-ci.com/YuHuiDeakin/rabc)
-[![R-CMD-check](https://github.com/YuHuiDeakin/rabc/workflows/R-CMD-check/badge.svg)](https://github.com/YuHuiDeakin/rabc/actions)
 <!-- badges: end -->
 
 The goal of rabc is to facilitate the development of animal behaviour classification models using accelerometer data.
@@ -47,7 +46,13 @@ This is a basic example which shows you how to solve a common problem:
 library(rabc)
 ## basic example code
 
+## order data by behaviour labels 
 whitestork_acc_sorted <- order_acc(whitestork_acc)
-plot_acc(whitestork_acc_sorted)
+
+## calculate ACC data into time domain features
+df_time <- calculate_feature_time(whitestork_acc_sorted, winlen_dba = 11)
+
+## use time domain features to train a model and output results
+predictions <- plot_confusion_matrix(df_time, vec_label = whitestork_acc_sorted$V121)
 ```
 
