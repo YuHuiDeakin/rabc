@@ -236,8 +236,8 @@ plot_confusion_matrix <- function(df_feature = NULL, vec_label = NULL) {
   precisionvalue <- (tempdf %>% dplyr::group_by(pre) %>% dplyr::summarise(total = sum(N)))$total
   print(ggplot2::ggplot(con_frame, ggplot2::aes(x = as.numeric(obs), y = as.numeric(pre),
                                       label = N)) +
-          ggplot2::geom_jitter(aes(color = flag), width = 0.2, height = 0.2, size = 0.7) +
-          ggplot2::geom_text(aes(color = flag), nudge_x = 0.3, nudge_y = -0.3, show.legend = FALSE) +
+          ggplot2::geom_jitter(ggplot2::aes(color = flag), width = 0.2, height = 0.2, size = 0.7) +
+          ggplot2::geom_text(ggplot2::aes(color = flag), nudge_x = 0.3, nudge_y = -0.3, show.legend = FALSE) +
           ggplot2::scale_x_continuous(name = "Observations",
                                       breaks = 1:length(levels(con_frame$obs)),
                                       labels = unique(as.character(con_frame$obs)),

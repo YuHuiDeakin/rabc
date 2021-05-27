@@ -1,0 +1,12 @@
+name: rabcpresentation
+title: rabcpresentation
+username:
+account: huiyu-deakin
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2460681
+bundleId: 3275236
+url: https://huiyu-deakin.shinyapps.io/rabcpresentation/
+when: 1592284268.75443
+asMultiple: FALSE
+asStatic: FALSE

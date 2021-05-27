@@ -22,7 +22,8 @@ You can install the development version from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("YuHuiDeakin/rabc")
+devtools::install_github("YuHuiDeakin/rabc", build_vignette = TRUE)
+# It will take several minutes to install the package because of vignette building. 
 ```
 
 ## Workflow of the package
@@ -38,4 +39,8 @@ This is a basic example which shows you how to solve a common problem:
 ``` r
 library(rabc)
 ## basic example code
+
+whitestork_acc_sorted <- order_acc(whitestork_acc)
+#df_time <- calculate_feature_time(whitestork_acc_sorted, winlen_dba = 11)
+#plot_confusion_matrix(df_time, vec_label = whitestork_acc_sorted$V121)
 ```
