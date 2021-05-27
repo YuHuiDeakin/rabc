@@ -36,23 +36,3 @@ devtools::install_github("YuHuiDeakin/rabc", build_vignette = TRUE)
 Here is the function workflow of the package:
 
 ![](rabc Diagram.jpeg)
-
-
-## Example
-
-This is a basic example which shows you how to solve a common problem:
-
-```{r example}
-library(rabc)
-## basic example code
-
-## order data by behaviour labels 
-whitestork_acc_sorted <- order_acc(whitestork_acc)
-
-## calculate ACC data into time domain features
-df_time <- calculate_feature_time(whitestork_acc_sorted, winlen_dba = 11)
-
-## use time domain features to train a model and output results
-predictions <- plot_confusion_matrix(df_time, vec_label = whitestork_acc_sorted$V121)
-```
-
