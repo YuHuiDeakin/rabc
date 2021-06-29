@@ -79,9 +79,9 @@ calculate_feature_time <- function(df_raw = NULL, winlen_dba, axis_num = 3) {
   col_num <- dim(df_raw)[[2]]
   val_range <- max(as.numeric(as.matrix(df_raw[, -col_num]))) -
     min(as.numeric(as.matrix(df_raw[, -col_num])))
-  if (val_range > 16 | val_range < 2) {
-    warning("Suggestion: transform raw data into 1g = 9.8 m/s2 for consistency")
-  }
+  # if (val_range > 16 | val_range < 2) {
+  #   warning("Suggestion: transform raw data into 1g = 9.8 m/s2 for consistency")
+  # }
 
   df_raw <- as.data.frame(df_raw)
 
@@ -308,9 +308,9 @@ calculate_feature_freq <- function(df_raw = NULL, samp_freq, axis_num = 3) {
   col_num <- dim(df_raw)[[2]]
   val_range <- max(as.numeric(as.matrix(df_raw[, -col_num]))) -
     min(as.numeric(as.matrix(df_raw[, -col_num])))
-  if (val_range > 16 | val_range < 2) {
-    warning("Suggestion: transform raw data into 1g = 9.8 m/s2 for consistency")
-  }
+  # if (val_range > 16 | val_range < 2) {
+  #   warning("Suggestion: transform raw data into 1g = 9.8 m/s2 for consistency")
+  # }
 
   df_raw <- as.data.frame(df_raw)
 

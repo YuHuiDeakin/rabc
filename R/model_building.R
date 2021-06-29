@@ -295,9 +295,9 @@ plot_wrong_classifications <- function(df_raw = NULL, axis_num = 3, df_result = 
   col_num <- ncol(df_raw)
   val_range <- max(as.numeric(as.matrix(df_raw[, -col_num]))) -
     min(as.numeric(as.matrix(df_raw[, -col_num])))
-  if (val_range > 16 | val_range < 2) {
-    warning("Suggestion: transform raw data into 1g = 9.8 m/s2 for consistency")
-  }
+  # if (val_range > 16 | val_range < 2) {
+  #   warning("Suggestion: transform raw data into 1g = 9.8 m/s2 for consistency")
+  # }
 
   wrong_ind <- which(df_result[[1]] != df_result[[2]])
 

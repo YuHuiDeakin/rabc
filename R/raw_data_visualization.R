@@ -89,9 +89,9 @@ plot_acc <- function(df_raw = NULL, axis_num = 3) {
   col_num <- ncol(df_raw)
   val_range <- max(as.numeric(as.matrix(df_raw[, -col_num]))) -
     min(as.numeric(as.matrix(df_raw[, -col_num])))
-  if (val_range > 16 | val_range < 2) {
-    warning("Suggestion: transform raw data into 1g = 9.8 m/s2 for consistency")
-  }
+  # if (val_range > 16 | val_range < 2) {
+  #   warning("Suggestion: transform raw data into 1g = 9.8 m/s2 for consistency")
+  # }
 
   if (nrow(df_raw) > 10000) {
     warning("Large dataset will be slow to plot. Alternative option is to segment
